@@ -37,19 +37,21 @@ class RequestJobList
     /**
      * @throws \Exception
      */
-    public function retry(Request $request): Request
+    public function retry(Request $request, $error): Request
     {
         $request->incrementsError();
         $request->setNextAttemptAt(
             (new \DateTime())->add(new \DateInterval('PT' . $this->attemptInterval . 'M'))
         );
+        $request->setError($error);
         $this->requestRepository->add($request, true);
         return $request;
     }
 
-    public function fail(Request $request): Request
+    public function fail(Request $request, $error): Request
     {
         $request->setStatus(Status::ERROR);
+        $request->setError($error);
         $this->requestRepository->add($request, true);
         return $request;
     }

@@ -43,6 +43,9 @@ class Request
     #[ORM\OneToMany(mappedBy: 'request', targetEntity: Response::class)]
     private $responses;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $error;
+
     public function __construct()
     {
         $this->responses = new ArrayCollection();
@@ -182,6 +185,18 @@ class Request
                 $response->setRequest(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getError(): ?string
+    {
+        return $this->error;
+    }
+
+    public function setError(?string $error): self
+    {
+        $this->error = $error;
 
         return $this;
     }
