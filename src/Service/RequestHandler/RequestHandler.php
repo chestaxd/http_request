@@ -34,7 +34,8 @@ class RequestHandler implements RequestHandlerInterface
             $requestItem->getUrl(),
             $requestOptions
         );
-        return new Response($responseData->getStatusCode(), $responseData->toArray());
+        return new Response($responseData->getStatusCode(), json_decode($responseData->getContent(false), true));
+
     }
 
     private function getProxyObject(): Proxy
