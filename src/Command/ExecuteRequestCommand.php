@@ -70,8 +70,9 @@ class ExecuteRequestCommand extends Command
             $io->info('Job done:' . $job->getId());
             return Command::SUCCESS;
         } catch
-        (\Exception) {
+        (\Exception $exception) {
             sleep(self::REQUEST_INTERVAL);
+            $job->setError($exception->getMessage());
             $job->incrementsError();
             return $this->doJob($job, $io);
         }

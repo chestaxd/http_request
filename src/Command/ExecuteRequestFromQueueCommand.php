@@ -56,9 +56,10 @@ class ExecuteRequestFromQueueCommand extends Command
         } catch (TransportExceptionInterface $exception) {
             $io->error('Job Error:' . $job->getId());
             $attempts = $this->parameterBag->get('app.attempt_count');
+            $job->setError($exception->getMessage());
             $job->getExecutionsWithError() < $attempts ?
-                $this->requestJobList->retry($job, $exception->getMessage()) :
-                $this->requestJobList->fail($job, $exception->getMessage());
+                $this->requestJobList->retry($job) :
+                $this->requestJobList->fail($job);
             return Command::FAILURE;
         } catch (\Exception) {
             //todo handle others exception
