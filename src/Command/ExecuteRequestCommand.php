@@ -49,7 +49,7 @@ class ExecuteRequestCommand extends Command
         return $this->doJob($job, $io);
     }
 
-    private function doJob(Request $job, SymfonyStyle $io): bool
+    private function doJob(Request $job, SymfonyStyle $io): int
     {
         try {
             if ($job->getExecutionsWithError() >= self::MAX_EXECUTE_ERRORS) {
