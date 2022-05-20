@@ -25,22 +25,20 @@ class RequestHandler implements RequestHandlerInterface
      */
     public function handle(RequestItem $requestItem, $useProxy = false): Response
     {
+        $requestOptions = $requestItem->getRequestOptions();
         if ($useProxy) {
-            $requestItem->setProxy($this->getProxy());
+            $requestOptions['proxy'] = $this->getProxyObject()->getProxy();
         }
-
         $responseData = $this->client->request(
             $requestItem->getMethod(),
             $requestItem->getUrl(),
-            $requestItem->getOptions()
+            $requestOptions
         );
         return new Response($responseData->getStatusCode(), $responseData->toArray());
     }
 
-    private function getProxy(): Proxy
+    private function getProxyObject(): Proxy
     {
         return $this->proxyList->getRandomProxy();
     }
-
-
 }

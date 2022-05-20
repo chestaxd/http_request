@@ -13,7 +13,7 @@ abstract class RequestItem
 
     public abstract static function fromArray(array $requestData);
 
-    public function getOptions(): array
+    public function getRequestOptions(): array
     {
         return $this->options;
     }
@@ -26,11 +26,5 @@ abstract class RequestItem
     public function getUrl(): string
     {
         return $this->url;
-    }
-
-    public function setProxy(Proxy $proxy): static
-    {
-        $this->options['proxy'] = $proxy->getProxy();
-        return $this;
     }
 }
