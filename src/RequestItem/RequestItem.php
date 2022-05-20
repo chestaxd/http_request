@@ -2,16 +2,21 @@
 
 namespace App\RequestItem;
 
-use App\Entity\Proxy;
 
-abstract class RequestItem
+class RequestItem
 {
     protected string $method;
     protected string $url;
     protected array $options = [];
 
-
-    public abstract static function fromArray(array $requestData);
+    public function __construct($method, $url, $options)
+    {
+        $this->method = $method;
+        $this->url = $url;
+        if ($options) {
+            $this->options = $options;
+        }
+    }
 
     public function getRequestOptions(): array
     {
@@ -26,5 +31,10 @@ abstract class RequestItem
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public static function fromRequestData(array $requestData): self
+    {
+        return new self($requestData['method'], $requestData['url'], $requestData['options'] ?? false);
     }
 }

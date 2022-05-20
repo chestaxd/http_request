@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\RequestItem\RequestItemFactory;
+use App\RequestItem\RequestItem;
 use App\Service\RequestHandler\RequestHandlerInterface;
 use App\Service\RequestJobList;
 use App\Service\ResponseWriter\ResponseWriterInterface;
@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[AsCommand(
     name: 'app:execute-request-from-queue',
@@ -43,7 +42,7 @@ class ExecuteRequestFromQueueCommand extends Command
         }
         try {
             $io->info('Start job:' . $job->getId());
-            $requestItem = RequestItemFactory::getRequestItem($job->getRequestData());
+            $requestItem = RequestItem::fromRequestData($job->getRequestData());
             $response = $this->requestHandler->handle($requestItem, $job->isUseProxy());
             if ($job->isSaveResponse()) {
                 $io->info('Write Response:' . $job->getId());

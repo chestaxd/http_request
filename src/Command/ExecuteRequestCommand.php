@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Request;
-use App\RequestItem\RequestItemFactory;
+use App\RequestItem\RequestItem;
 use App\Service\RequestHandler\RequestHandlerInterface;
 use App\Service\RequestJobList;
 use App\Service\ResponseWriter\ResponseWriterInterface;
@@ -58,7 +58,7 @@ class ExecuteRequestCommand extends Command
                 return Command::FAILURE;
             }
             $io->info('Start job:' . $job->getId());
-            $requestItem = RequestItemFactory::getRequestItem($job->getRequestData());
+            $requestItem = RequestItem::fromRequestData($job->getRequestData());
             $response = $this->requestHandler->handle($requestItem, $job->isUseProxy());
 
             if ($job->isSaveResponse()) {
