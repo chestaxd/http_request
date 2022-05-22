@@ -11,7 +11,7 @@ class RequestItem
 
     public function __construct($method, $url, $options)
     {
-        $this->method = $method;
+        $this->method = strtoupper($method);
         $this->url = $url;
         if ($options) {
             $this->options = $options;
