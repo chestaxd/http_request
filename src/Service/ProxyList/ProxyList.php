@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Proxy;
+namespace App\Service\ProxyList;
 
 use App\Entity\Proxy;
 

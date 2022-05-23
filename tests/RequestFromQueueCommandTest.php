@@ -7,7 +7,7 @@ use App\Command\ExecuteRequestFromQueueCommand;
 use App\Entity\Proxy;
 use App\Entity\Request;
 use App\Enum\Status;
-use App\Service\Proxy\ProxyList;
+use App\Service\ProxyList\ProxyList;
 use App\Service\RequestHandler\RequestHandler;
 use App\Service\RequestHandler\RequestHandlerInterface;
 use App\Service\RequestJobList;

@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\RequestItem\GetRequest;
+use App\RequestItem\InitStrategy;
 use App\RequestItem\RequestItem;
 use App\Service\RequestHandler\RequestHandlerInterface;
 use App\Service\RequestJobList;
@@ -12,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[AsCommand(
     name: 'app:execute-request-from-queue',
@@ -40,9 +43,12 @@ class ExecuteRequestFromQueueCommand extends Command
             $io->warning('Job not found');
             return Command::SUCCESS;
         }
+        $io->info('Start job:' . $job->getId());
         try {
-            $io->info('Start job:' . $job->getId());
-            $requestItem = RequestItem::fromRequestData($job->getRequestData());
+
+            $requestData = $job->getRequestData();
+            $request = $this->getStrategy($requestData['method']);
+            $requestItem = new RequestItem($request, $requestData);
             $response = $this->requestHandler->handle($requestItem, $job->isUseProxy());
             if ($job->isSaveResponse()) {
                 $io->info('Write Response:' . $job->getId());
@@ -62,5 +68,13 @@ class ExecuteRequestFromQueueCommand extends Command
             return Command::FAILURE;
         }
         return Command::SUCCESS;
+    }
+
+    private function getStrategy($method): InitStrategy
+    {
+        return match (strtolower($method)) {
+            'get' => new GetRequest(),
+            default => throw new NotFoundHttpException('Strategy not found')
+        };
     }
 }

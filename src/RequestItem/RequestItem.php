@@ -2,20 +2,20 @@
 
 namespace App\RequestItem;
 
-
 class RequestItem
 {
     protected string $method;
     protected string $url;
     protected array $options = [];
 
-    public function __construct($method, $url, $options)
+    public function __construct(private readonly InitStrategy $strategy, array $data)
     {
-        $this->method = strtoupper($method);
-        $this->url = $url;
-        if ($options) {
-            $this->options = $options;
-        }
+        $this->init($data);
+    }
+
+    private function init(array $requestData)
+    {
+        $this->strategy->init($requestData, $this);
     }
 
     public function getRequestOptions(): array
@@ -33,8 +33,28 @@ class RequestItem
         return $this->url;
     }
 
-    public static function fromRequestData(array $requestData): self
+    /**
+     * @param string $method
+     */
+    public function setMethod(string $method): void
     {
-        return new self($requestData['method'], $requestData['url'], $requestData['options'] ?? false);
+        $this->method = $method;
     }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl(string $url): void
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @param array $options
+     */
+    public function setOptions(array $options): void
+    {
+        $this->options = $options;
+    }
+
 }

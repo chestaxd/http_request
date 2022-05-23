@@ -2,10 +2,9 @@
 
 namespace App\Service\RequestHandler;
 
-use App\RequestItem\RequestItem;
-use App\Entity\Proxy;
 use App\Entity\Response;
-use App\Service\Proxy\ProxyList;
+use App\RequestItem\RequestItem;
+use App\Service\Proxy\HttpProxy;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -14,7 +13,7 @@ class RequestHandler implements RequestHandlerInterface
 
 
     public function __construct(
-        private ProxyList           $proxyList,
+        private HttpProxy           $httpProxy,
         private HttpClientInterface $client
     )
     {
@@ -27,7 +26,7 @@ class RequestHandler implements RequestHandlerInterface
     {
         $requestOptions = $requestItem->getRequestOptions();
         if ($useProxy) {
-            $requestOptions['proxy'] = $this->getProxyObject()->getProxy();
+            $requestOptions['proxy'] = $this->httpProxy->get();
         }
         $responseData = $this->client->request(
             $requestItem->getMethod(),
@@ -35,11 +34,10 @@ class RequestHandler implements RequestHandlerInterface
             $requestOptions
         );
         return new Response($responseData->getStatusCode(), json_decode($responseData->getContent(false), true));
-
     }
 
-    private function getProxyObject(): Proxy
-    {
-        return $this->proxyList->getRandomProxy();
-    }
+//    private function getProxyObject(): Proxy
+//    {
+//        return $this->proxyList->getRandomProxy();
+//    }
 }

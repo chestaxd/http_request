@@ -48,9 +48,14 @@ class Proxy
         return $this;
     }
 
-    public function getProxy(): string
+    public function getLogin(): string
     {
-        return 'http://' . $this->address . ':' . $this->port;
-
+        return 'login';
     }
+
+    public function getPassword(): string
+    {
+        return 'password';
+    }
+
 }

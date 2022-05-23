@@ -4,7 +4,7 @@ namespace App\Tests;
 
 use App\Entity\Response;
 use App\RequestItem\RequestItem;
-use App\Service\Proxy\ProxyList;
+use App\Service\ProxyList\ProxyList;
 use App\Service\RequestHandler\RequestHandler;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpClient\MockHttpClient;

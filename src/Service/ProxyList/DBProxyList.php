@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Proxy;
+namespace App\Service\ProxyList;
 
 use App\Entity\Proxy;
 use App\Repository\ProxyRepository;
@@ -16,11 +16,7 @@ class DBProxyList implements ProxyList
 
     public function getProxyList(): array
     {
-        $proxyEntities = $this->proxyRepository->findAll();
-
-        return array_map(function ($proxy) {
-            return $proxy->getProxy();
-        }, $proxyEntities);
+        return $this->proxyRepository->findAll();
     }
 
     public function addProxy(Proxy $proxy): static
