@@ -47,8 +47,8 @@ class ExecuteRequestFromQueueCommand extends Command
         try {
 
             $requestData = $job->getRequestData();
-            $request = $this->getStrategy($requestData['method']);
-            $requestItem = new RequestItem($request, $requestData);
+            $requestItemInitStrategy = $this->getStrategy($requestData['method']);
+            $requestItem = new RequestItem($requestItemInitStrategy, $requestData);
             $response = $this->requestHandler->handle($requestItem, $job->isUseProxy());
             if ($job->isSaveResponse()) {
                 $io->info('Write Response:' . $job->getId());
